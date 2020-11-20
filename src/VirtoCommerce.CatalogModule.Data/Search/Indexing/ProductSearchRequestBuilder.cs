@@ -38,7 +38,11 @@ namespace VirtoCommerce.CatalogModule.Data.Search.Indexing
                 request = new SearchRequest
                 {
                     SearchKeywords = productSearchCriteria.Keyword,
-                    SearchFields = new[] { "__content" },
+                    SearchFields = new[]
+                    {
+                        "__content",
+                        $"__content_{productSearchCriteria.LanguageCode}"
+                    },
                     Filter = GetFilters(allFilters).And(),
                     Sorting = GetSorting(productSearchCriteria),
                     Skip = criteria.Skip,

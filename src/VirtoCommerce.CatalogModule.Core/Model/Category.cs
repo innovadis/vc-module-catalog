@@ -58,6 +58,7 @@ namespace VirtoCommerce.CatalogModule.Core.Model
 
         public bool? IsActive { get; set; }
         public string OuterId { get; set; }
+        public string[] ExcludedProperties { get; set; }
         [JsonIgnore]
         public IList<Category> Children { get; set; }
 
@@ -110,11 +111,17 @@ namespace VirtoCommerce.CatalogModule.Core.Model
 
         public virtual void TryInheritFrom(IEntity parent)
         {
+            var excludedProperties = ExcludedProperties ?? Array.Empty<string>();
             if (parent is IHasProperties hasProperties)
             {
                 //Properties inheritance
                 foreach (var parentProperty in hasProperties.Properties ?? Array.Empty<Property>())
                 {
+                    if (excludedProperties.Contains(parentProperty.Name, StringComparer.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
                     if (Properties == null)
                     {
                         Properties = new List<Property>();
